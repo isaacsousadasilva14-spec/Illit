@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Illit - Álbuns & Discografia</title>
+    <style>
+        :root {
+            --cor-fundo: #000;
+            --cor-texto: #aacadd;
+            --cor-brilho: rgba(160, 210, 255, 0.45);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            font-family: system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Área principal */
+        .hero {
+            position: relative;
+            width: 100%;
+            max-width: 1600px;
+            min-height: 100vh;
+            margin: 0 auto;
+            overflow: hidden;
+            background-color: var(--cor-fundo);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 100px;
+        }
+
+        /* Camada da imagem de fundo fixa ao rolar */
+        .hero-bg {
+            position: fixed;
+            inset: 0;
+            background-image: url("file:///c:/Users/ALN/Downloads/teste/img%20site/Illit%20-%20mamihilapinapai.jpg");
+            background-position: center top;
+            background-size: cover;
+            background-repeat: no-repeat;
+            filter: blur(3.5px) brightness(0.65);
+            transform: scale(1.04);
+            transition: background-image 0.35s ease, opacity 0.35s ease;
+            z-index: 0;
+        }
+
+        .hero-bg.trocando {
+            opacity: 0.35;
+        }
+
+        /* Fade para preto nos cantos e bordas (vinheta) */
+        .hero::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            background: radial-gradient(
+                circle at center,
+                rgba(0, 0, 0, 0.25) 35%,
+                rgba(0, 0, 0, 0.78) 75%,
+                rgba(0, 0, 0, 0.98) 100%
+            );
+            box-shadow: inset 0 0 95px 38px #000;
+        }
+
+        /* Cabeçalho superior */
+        .texto-topo {
+            position: relative;
+            z-index: 2;
+            margin-top: clamp(24px, 5vh, 48px);
+            width: min(92%, 1100px);
+            text-align: center;
+        }
+
+        .texto-topo h1 {
+            font-size: clamp(1.65rem, 4vw, 3rem);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+            text-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.95),
+                0 0 18px rgba(255, 255, 255, 0.55),
+                0 0 36px var(--cor-brilho);
+            transition: text-shadow 0.35s ease;
+        }
+
+        .subtitulo-topo {
+            margin-top: 8px;
+            font-size: 0.95rem;
+            color: rgba(225, 240, 255, 0.85);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.95);
+        }
+
+        /* Menu de navegação */
+        .menu-botoes {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .btn-nav {
+            display: inline-block;
+            padding: 10px 24px;
+            border-radius: 999px;
+            border: 1px solid rgba(180, 225, 255, 0.7);
+            background-color: rgba(0, 0, 0, 0.55);
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            box-shadow:
+                0 0 16px var(--cor-brilho),
+                inset 0 0 10px rgba(255, 255, 255, 0.12);
+            transition: transform 0.2s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .btn-nav:hover,
+        .btn-nav:focus-visible {
+            background-color: rgba(255, 255, 255, 0.16);
+            box-shadow:
+                0 0 24px rgba(160, 220, 255, 0.7),
+                0 0 10px rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* ============================================================
+           LINHA DO TEMPO / LISTA CRONOLÓGICA DE ÁLBUNS
+           ============================================================ */
+        .container-albuns {
+            position: relative;
+            z-index: 2;
+            width: min(92%, 1040px);
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .card-album {
+            position: relative;
+            border-radius: 18px;
+            padding: 22px 24px;
+            background: rgba(10, 12, 16, 0.75);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(180, 225, 255, 0.36);
+            box-shadow:
+                0 12px 30px rgba(0, 0, 0, 0.82),
+                0 0 16px var(--cor-brilho);
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.3s ease;
+        }
+
+        .card-album:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.75);
+            box-shadow:
+                0 16px 36px rgba(0, 0, 0, 0.92),
+                0 0 26px var(--cor-brilho);
+        }
+
+        .card-album.mais-recente {
+            border-color: rgba(180, 235, 255, 0.85);
+            box-shadow:
+                0 14px 34px rgba(0, 0, 0, 0.9),
+                0 0 28px var(--cor-brilho);
+        }
+
+        .album-topo {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .album-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .badge-ordem {
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(170, 202, 221, 0.16);
+            border: 1px solid rgba(180, 225, 255, 0.45);
+            color: #ffffff;
+        }
+
+        .badge-recente {
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(160, 235, 255, 0.22);
+            border: 1px solid rgba(200, 245, 255, 0.8);
+            color: #ffffff;
+        }
+
+        .album-data {
+            font-size: 0.86rem;
+            color: var(--cor-texto);
+            font-weight: 500;
+        }
+
+        .album-titulo {
+            font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .album-formato {
+            font-size: 0.9rem;
+            color: rgba(220, 238, 255, 0.85);
+            margin-top: 2px;
+        }
+
+        .btn-faixas {
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(180, 225, 255, 0.55);
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .btn-faixas:hover {
+            background: rgba(255, 255, 255, 0.18);
+            transform: translateY(-1px);
+        }
+
+        .album-descricao {
+            margin-top: 12px;
+            font-size: 0.94rem;
+            line-height: 1.55;
+            color: rgba(235, 245, 255, 0.92);
+        }
+
+        .album-faixas {
+            display: none;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(180, 225, 255, 0.22);
+        }
+
+        .album-faixas.aberta {
+            display: block;
+        }
+
+        .faixas-titulo {
+            font-size: 0.84rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--cor-texto);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .lista-faixas {
+            list-style: decimal inside;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 6px 18px;
+            color: #ffffff;
+            font-size: 0.92rem;
+        }
+
+        /* Botão flutuante de tema */
+        .btn-tema {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 999;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 18px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            background: rgba(12, 12, 16, 0.78);
+            backdrop-filter: blur(8px);
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow:
+                0 8px 24px rgba(0, 0, 0, 0.75),
+                0 0 16px var(--cor-brilho);
+            transition: transform 0.2s ease, background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.35s ease;
+        }
+
+        .btn-tema:hover,
+        .btn-tema:focus-visible {
+            background: rgba(28, 28, 36, 0.92);
+            border-color: rgba(255, 255, 255, 0.55);
+            transform: translateY(-2px);
+        }
+
+        .tema-nome {
+            color: rgba(225, 240, 255, 0.9);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="hero-bg" id="heroBg" aria-hidden="true"></div>
+
+        <div class="texto-topo">
+            <h1>Álbuns do Illit</h1>
+            <p class="subtitulo-topo">Linha do tempo completa: do primeiro lançamento ao mais recente</p>
+            <nav class="menu-botoes" aria-label="Navegação principal">
+                <a href="MainPg.html" class="btn-nav">Início</a>
+                <a href="About.html" class="btn-nav">Sobre</a>
+                <a href="Stage.html" class="btn-nav">Estágios</a>
+            </nav>
+        </div>
+
+        <main class="container-albuns" id="containerAlbuns" aria-label="Cronologia de álbuns"></main>
+    </section>
+
+    <button type="button" class="btn-tema" id="btnTema" aria-label="Alternar tema de fundo">
+        <span>Tema:</span>
+        <span class="tema-nome" id="nomeTema">mamihilapinapai</span>
+    </button>
+
+    <script>
+        // ============================================================
+        // 1. CRONOLOGIA DE ÁLBUNS (Do primeiro ao mais recente)
+        // ============================================================
+        const ALBUNS = [
+            {
+                ordem: "1º Lançamento • Mini Álbum de Estreia",
+                titulo: "SUPER REAL ME",
+                data: "25 de março de 2024",
+                formato: "1º Mini Álbum (EP)",
+                descricao: "Marca a estreia oficial do ILLIT, apresentando o som pop vibrante do grupo e o sucesso global \"Magnetic\", acompanhado de faixas como \"Lucky Girl Syndrome\".",
+                faixas: ["My World", "Magnetic", "Midnight Fiction", "Lucky Girl Syndrome"]
+            },
+            {
+                ordem: "2º Mini Álbum",
+                titulo: "I'LL LIKE YOU",
+                data: "21 de outubro de 2024",
+                formato: "2º Mini Álbum (EP)",
+                descricao: "Explora sentimentos de amizade, escolhas e afeto sob a perspectiva espontânea do grupo, puxado pela faixa-título \"Cherish (My Love)\" e \"Tick-Tack\".",
+                faixas: ["I'll Like You", "Cherish (My Love)", "IYKYK (If You Know You Know)", "Pimple", "Tick-Tack"]
+            },
+            {
+                ordem: "3º Mini Álbum",
+                titulo: "bomb",
+                data: "16 de junho de 2025",
+                formato: "3º Mini Álbum (EP)",
+                descricao: "Amplia a identidade musical do grupo com energia cativante e conceitos lúdicos, tendo \"Do the Dance\" (빌려온 고양이) como destaque.",
+                faixas: ["little monster", "빌려온 고양이 (Do the Dance)", "jellyous", "oops!", "밤소풍"]
+            },
+            {
+                ordem: "Single Álbum",
+                titulo: "NOT CUTE ANYMORE",
+                data: "24 de novembro de 2025",
+                formato: "Single Álbum",
+                descricao: "Lançamento que mostra uma faceta mais confiante e ousada do ILLIT, contrastando com a imagem puramente fofa das fases iniciais.",
+                faixas: ["NOT CUTE ANYMORE", "NOT ME"]
+            },
+            {
+                ordem: "4º Mini Álbum",
+                titulo: "MAMIHLAPINATAPAI",
+                data: "30 de abril de 2026",
+                formato: "4º Mini Álbum (EP)",
+                descricao: "Aprofunda a estética e a sonoridade do grupo — incluindo batidas com influência techno na faixa \"It's Me\" — em torno de sentimentos intensos e atitude.",
+                faixas: ["GRWM (Get Ready With Me)", "It's Me", "paw, paw!", "Mamihlapinatapai", "Love, older you"]
+            },
+            {
+                ordem: "5º Mini Álbum",
+                titulo: "BREAK EVEN",
+                data: "26 de outubro de 2026",
+                formato: "5º Mini Álbum (EP)",
+                descricao: "Lançamento mais recente da cronologia, trazendo uma postura mais decidida sobre seguir em frente e valorizar a própria energia, liderado por \"You're Under Arrest\".",
+                faixas: ["You're Under Arrest (체포하겠어)"]
+            }
+        ];
+
+        function renderizarAlbuns() {
+            const container = document.getElementById("containerAlbuns");
+            container.innerHTML = "";
+
+            ALBUNS.forEach((album, index) => {
+                const ehMaisRecente = index === ALBUNS.length - 1;
+                const card = document.createElement("article");
+                card.className = `card-album${ehMaisRecente ? " mais-recente" : ""}`;
+
+                card.innerHTML = `
+                    <div class="album-topo">
+                        <div>
+                            <div class="album-meta">
+                                <span class="badge-ordem">${album.ordem}</span>
+                                ${ehMaisRecente ? `<span class="badge-recente">Mais recente</span>` : ""}
+                                <span class="album-data">${album.data}</span>
+                            </div>
+                            <h2 class="album-titulo">${album.titulo}</h2>
+                            <p class="album-formato">${album.formato}</p>
+                        </div>
+                        <button type="button" class="btn-faixas" aria-expanded="${ehMaisRecente}">
+                            ${ehMaisRecente ? "Ocultar faixas" : "Ver faixas"}
+                        </button>
+                    </div>
+                    <p class="album-descricao">${album.descricao}</p>
+                    <div class="album-faixas${ehMaisRecente ? " aberta" : ""}">
+                        <div class="faixas-titulo">Faixas</div>
+                        <ol class="lista-faixas">
+                            ${album.faixas.map((faixa) => `<li>${faixa}</li>`).join("")}
+                        </ol>
+                    </div>
+                `;
+
+                const botao = card.querySelector(".btn-faixas");
+                const painelFaixas = card.querySelector(".album-faixas");
+
+                botao.addEventListener("click", () => {
+                    const estaAberta = painelFaixas.classList.toggle("aberta");
+                    botao.setAttribute("aria-expanded", String(estaAberta));
+                    botao.textContent = estaAberta ? "Ocultar faixas" : "Ver faixas";
+                });
+
+                container.appendChild(card);
+            });
+        }
+
+        renderizarAlbuns();
+
+        // ============================================================
+        // 2. SISTEMA DE TEMAS
+        // ============================================================
+        const TEMAS = [
+            {
+                nome: "mamihilapinapai",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/img%20site/Illit%20-%20mamihilapinapai.jpg",
+                brilho: "rgba(160, 210, 255, 0.45)"
+            },
+            {
+                nome: "jellyous",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/img%20site/illit%20-%20jellyous.gif",
+                brilho: "rgba(220, 160, 255, 0.45)"
+            },
+            {
+                nome: "billyeongoiang",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/img%20site/Illit%20-%20billyeongoiang.gif",
+                brilho: "rgba(160, 255, 210, 0.45)"
+            },
+            {
+                nome: "not me",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/img%20site/not%20me.gif",
+                brilho: "rgba(255, 180, 180, 0.45)"
+            },
+            {
+                nome: "magnetic",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/img%20site/magnetic.gif",
+                brilho: "rgba(180, 220, 255, 0.45)"
+            },
+            {
+                nome: "BREAKEVEN",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/img%20site/Illit%20-%20%20BREAKEVEN.jpg",
+                brilho: "rgba(255, 220, 160, 0.45)"
+            }
+        ];
+
+        const heroBg = document.getElementById("heroBg");
+        const btnTema = document.getElementById("btnTema");
+        const nomeTemaEl = document.getElementById("nomeTema");
+        const rootStyle = document.documentElement.style;
+
+        let indiceAtual = 0;
+
+        function aplicarTema(indice, animar = true) {
+            const tema = TEMAS[indice];
+            if (!tema) return;
+
+            if (animar) {
+                heroBg.classList.add("trocando");
+            }
+
+            const imgLoader = new Image();
+            imgLoader.src = tema.imagem;
+            imgLoader.onload = () => {
+                setTimeout(() => {
+                    heroBg.style.backgroundImage = `url("${tema.imagem}")`;
+                    nomeTemaEl.textContent = tema.nome;
+                    rootStyle.setProperty("--cor-brilho", tema.brilho);
+                    heroBg.classList.remove("trocando");
+                }, animar ? 140 : 0);
+            };
+        }
+
+        aplicarTema(0, false);
+
+        btnTema.addEventListener("click", () => {
+            indiceAtual = (indiceAtual + 1) % TEMAS.length;
+            aplicarTema(indiceAtual, true);
+        });
+    </script>
+</body>
+</html>

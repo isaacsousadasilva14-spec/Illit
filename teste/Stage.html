@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Illit - Vídeos & Estágios</title>
+    <style>
+        :root {
+            --cor-fundo: #000;
+            --cor-texto: #aacadd;
+            --cor-brilho: rgba(160, 210, 255, 0.45);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            font-family: system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Área principal */
+        .hero {
+            position: relative;
+            width: 100%;
+            max-width: 1600px;
+            min-height: 100vh;
+            margin: 0 auto;
+            overflow: hidden;
+            background-color: var(--cor-fundo);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 90px; /* Espaço para o botão flutuante de tema */
+        }
+
+        /* Camada da imagem de fundo fixa ao rolar */
+        .hero-bg {
+            position: fixed;
+            inset: 0;
+            background-image: url("file:///c:/Users/ALN/Downloads/teste/img%20site/Illit%20-%20mamihilapinapai.jpg");
+            background-position: center top;
+            background-size: cover;
+            background-repeat: no-repeat;
+            filter: blur(3.5px) brightness(0.65);
+            transform: scale(1.04);
+            transition: background-image 0.35s ease, opacity 0.35s ease;
+            z-index: 0;
+        }
+
+        .hero-bg.trocando {
+            opacity: 0.35;
+        }
+
+        /* Fade para preto nos cantos e bordas (vinheta) */
+        .hero::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            background: radial-gradient(
+                circle at center,
+                rgba(0, 0, 0, 0.25) 35%,
+                rgba(0, 0, 0, 0.78) 75%,
+                rgba(0, 0, 0, 0.98) 100%
+            );
+            box-shadow: inset 0 0 95px 38px #000;
+        }
+
+        /* Cabeçalho superior */
+        .texto-topo {
+            position: relative;
+            z-index: 2;
+            margin-top: clamp(24px, 5vh, 48px);
+            width: min(92%, 1100px);
+            text-align: center;
+        }
+
+        .texto-topo h1 {
+            font-size: clamp(1.65rem, 4vw, 3rem);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+            text-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.95),
+                0 0 18px rgba(255, 255, 255, 0.55),
+                0 0 36px var(--cor-brilho);
+            transition: text-shadow 0.35s ease;
+        }
+
+        /* Menu de navegação */
+        .menu-botoes {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .btn-nav {
+            display: inline-block;
+            padding: 10px 24px;
+            border-radius: 999px;
+            border: 1px solid rgba(180, 225, 255, 0.7);
+            background-color: rgba(0, 0, 0, 0.55);
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            box-shadow:
+                0 0 16px var(--cor-brilho),
+                inset 0 0 10px rgba(255, 255, 255, 0.12);
+            transition: transform 0.2s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .btn-nav:hover,
+        .btn-nav:focus-visible {
+            background-color: rgba(255, 255, 255, 0.16);
+            box-shadow:
+                0 0 24px rgba(160, 220, 255, 0.7),
+                0 0 10px rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* ============================================================
+           GRADE DE VÍDEOS DO YOUTUBE
+           ============================================================ */
+        .galeria-videos {
+            position: relative;
+            z-index: 2;
+            width: min(92%, 1160px);
+            margin-top: 38px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .card-video {
+            display: flex;
+            flex-direction: column;
+            border-radius: 16px;
+            overflow: hidden;
+            text-decoration: none;
+            color: #ffffff;
+            background: rgba(10, 12, 16, 0.72);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(180, 225, 255, 0.35);
+            box-shadow:
+                0 10px 28px rgba(0, 0, 0, 0.8),
+                0 0 16px var(--cor-brilho);
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.3s ease;
+        }
+
+        .card-video:hover,
+        .card-video:focus-visible {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.8);
+            box-shadow:
+                0 14px 34px rgba(0, 0, 0, 0.9),
+                0 0 26px var(--cor-brilho),
+                0 0 12px rgba(255, 255, 255, 0.35);
+        }
+
+        /* Container da Miniatura (proporção 16:9) */
+        .thumb-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            background-color: #08080a;
+        }
+
+        .thumb-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.35s ease, filter 0.35s ease;
+        }
+
+        .card-video:hover .thumb-wrapper img {
+            transform: scale(1.06);
+            filter: brightness(1.08);
+        }
+
+        /* Ícone de Play centralizado sobre a miniatura */
+        .play-badge {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 18px var(--cor-brilho);
+            transition: transform 0.25s ease, background-color 0.25s ease;
+        }
+
+        .card-video:hover .play-badge {
+            transform: translate(-50%, -50%) scale(1.12);
+            background: rgba(255, 255, 255, 0.22);
+        }
+
+        .play-badge::after {
+            content: "";
+            display: block;
+            margin-left: 4px;
+            border-style: solid;
+            border-width: 9px 0 9px 16px;
+            border-color: transparent transparent transparent #ffffff;
+        }
+
+        /* Área do título do vídeo */
+        .video-info {
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
+        .video-titulo {
+            font-size: 1.05rem;
+            font-weight: 600;
+            line-height: 1.35;
+            color: #ffffff;
+            text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
+        }
+
+        .video-subtitulo {
+            font-size: 0.82rem;
+            color: var(--cor-texto);
+            opacity: 0.85;
+        }
+
+        /* Botão flutuante de tema (idêntico à página 1) */
+        .btn-tema {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 999;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 18px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            background: rgba(12, 12, 16, 0.78);
+            backdrop-filter: blur(8px);
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow:
+                0 8px 24px rgba(0, 0, 0, 0.75),
+                0 0 16px var(--cor-brilho);
+            transition: transform 0.2s ease, background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.35s ease;
+        }
+
+        .btn-tema:hover,
+        .btn-tema:focus-visible {
+            background: rgba(28, 28, 36, 0.92);
+            border-color: rgba(255, 255, 255, 0.55);
+            transform: translateY(-2px);
+        }
+
+        .tema-nome {
+            color: rgba(225, 240, 255, 0.9);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="hero-bg" id="heroBg" aria-hidden="true"></div>
+
+        <div class="texto-topo">
+            <h1>Estágios & Vídeos</h1>
+            <nav class="menu-botoes" aria-label="Navegação principal">
+                <a href="MainPg.html" class="btn-nav">Início</a>
+                <a href="About.html" class="btn-nav">Sobre</a>
+                <a href="Albuns.html" class="btn-nav">Álbuns</a>
+            </nav>
+        </div>
+
+        <!-- Grade onde os vídeos do YouTube serão inseridos automaticamente -->
+        <main class="galeria-videos" id="galeriaVideos" aria-label="Lista de vídeos do YouTube"></main>
+    </section>
+
+    <button type="button" class="btn-tema" id="btnTema" aria-label="Alternar tema de fundo">
+        <span>Tema:</span>
+        <span class="tema-nome" id="nomeTema">mamihilapinapai</span>
+    </button>
+
+    <script>
+        // ============================================================
+        // 1. LISTA DE VÍDEOS DO YOUTUBE (Edite aqui os links e nomes)
+        // ============================================================
+        const VIDEOS = [
+            {
+                titulo: "ILLIT (아일릿) 'Magnetic' Official MV",
+                descricao: "MV Oficial • SUPER REAL ME",
+                url: "https://www.youtube.com/watch?v=Vk5-c_v4gMU"
+            },
+            {
+                titulo: "ILLIT (아일릿) 'Cherish (My Love)' Official MV",
+                descricao: "MV Oficial • I'LL LIKE YOU",
+                url: "https://www.youtube.com/watch?v=tbDGl7jEazA"
+            },
+            {
+                titulo: "ILLIT (아일릿) 'Lucky Girl Syndrome' Official MV",
+                descricao: "MV Oficial • SUPER REAL ME",
+                url: "https://www.youtube.com/watch?v=UCmgGZbfjmk"
+            },
+            {
+                titulo: "ILLIT (아일릿) 'Tick-Tack' Official MV",
+                descricao: "MV Oficial • I'LL LIKE YOU",
+                url: "https://www.youtube.com/watch?v=-nEGVrzPaiU"
+            }
+        ];
+
+        // Extrai automaticamente o ID do vídeo do YouTube a partir de qualquer link
+        function extrairIdYoutube(url) {
+            const regex = /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+            const match = url.match(regex);
+            return match ? match[1] : null;
+        }
+
+        // Renderiza os cards com miniatura automática do YouTube
+        function renderizarVideos() {
+            const container = document.getElementById("galeriaVideos");
+            container.innerHTML = "";
+
+            VIDEOS.forEach((video) => {
+                const videoId = extrairIdYoutube(video.url);
+                // Usa a miniatura oficial do YouTube (hqdefault garante carregamento mesmo sem 4K)
+                const thumbUrl = video.miniaturaPersonalizada || (videoId
+                    ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+                    : "");
+
+                const link = document.createElement("a");
+                link.href = video.url;
+                link.target = "_blank";
+                link.rel = "noopener noreferrer";
+                link.className = "card-video";
+
+                link.innerHTML = `
+                    <div class="thumb-wrapper">
+                        <img src="${thumbUrl}" alt="Miniatura: ${video.titulo}" loading="lazy">
+                        <div class="play-badge" aria-hidden="true"></div>
+                    </div>
+                    <div class="video-info">
+                        <h2 class="video-titulo">${video.titulo}</h2>
+                        ${video.descricao ? `<span class="video-subtitulo">${video.descricao}</span>` : ""}
+                    </div>
+                `;
+
+                container.appendChild(link);
+            });
+        }
+
+        renderizarVideos();
+
+        // ============================================================
+        // 2. SISTEMA DE TEMAS (Mesmo da página principal)
+        // ============================================================
+        const TEMAS = [
+            {
+                nome: "mamihilapinapai",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/img%20site/Illit%20-%20mamihilapinapai.jpg",
+                brilho: "rgba(160, 210, 255, 0.45)"
+            },
+            {
+                nome: "jellyous",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/img%20site/illit%20-%20jellyous.gif",
+                brilho: "rgba(220, 160, 255, 0.45)"
+            },
+            {
+                nome: "billyeongoiang",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/img%20site/Illit%20-%20billyeongoiang.gif",
+                brilho: "rgba(160, 255, 210, 0.45)"
+            },
+            {
+                nome: "not me",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/img%20site/not%20me.gif",
+                brilho: "rgba(255, 180, 180, 0.45)"
+            },
+            {
+                nome: "magnetic",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/img%20site/magnetic.gif",
+                brilho: "rgba(180, 220, 255, 0.45)"
+            },
+            {
+                nome: "BREAKEVEN",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/img%20site/Illit%20-%20%20BREAKEVEN.jpg",
+                brilho: "rgba(255, 220, 160, 0.45)"
+            }
+        ];
+
+        const heroBg = document.getElementById("heroBg");
+        const btnTema = document.getElementById("btnTema");
+        const nomeTemaEl = document.getElementById("nomeTema");
+        const rootStyle = document.documentElement.style;
+
+        let indiceAtual = 0;
+
+        function aplicarTema(indice, animar = true) {
+            const tema = TEMAS[indice];
+            if (!tema) return;
+
+            if (animar) {
+                heroBg.classList.add("trocando");
+            }
+
+            const imgLoader = new Image();
+            imgLoader.src = tema.imagem;
+            imgLoader.onload = () => {
+                setTimeout(() => {
+                    heroBg.style.backgroundImage = `url("${tema.imagem}")`;
+                    nomeTemaEl.textContent = tema.nome;
+                    rootStyle.setProperty("--cor-brilho", tema.brilho);
+                    heroBg.classList.remove("trocando");
+                }, animar ? 140 : 0);
+            };
+        }
+
+        aplicarTema(0, false);
+
+        btnTema.addEventListener("click", () => {
+            indiceAtual = (indiceAtual + 1) % TEMAS.length;
+            aplicarTema(indiceAtual, true);
+        });
+    </script>
+</body>
+</html>

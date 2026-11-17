@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Illit - Hybe</title>
+    <style>
+        :root {
+            --cor-fundo: #000;
+            --cor-texto: #aacadd;
+            --cor-brilho: rgba(160, 210, 255, 0.45);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            font-family: system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Área principal com imagem de fundo adaptável */
+        .hero {
+            position: relative;
+            width: 100%;
+            max-width: 1600px;
+            min-height: 100vh;
+            margin: 0 auto;
+            overflow: hidden;
+            background-color: var(--cor-fundo);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 95px;
+        }
+
+        /* Camada da imagem de fundo com leve blur */
+        .hero-bg {
+            position: fixed;
+            inset: 0;
+            background-image: url("file:///c:/Users/ALN/Downloads/teste/img%20site/Illit%20-%20mamihilapinapai.jpg");
+            background-position: center top;
+            background-size: cover;
+            background-repeat: no-repeat;
+            filter: blur(2.5px) brightness(0.82);
+            transform: scale(1.04); /* Evita bordas sem blur */
+            transition: background-image 0.35s ease, opacity 0.35s ease;
+            z-index: 0;
+        }
+
+        .hero-bg.trocando {
+            opacity: 0.35;
+        }
+
+        /* Fade para preto nos cantos e bordas (vinheta) */
+        .hero::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            background: radial-gradient(
+                circle at center,
+                rgba(0, 0, 0, 0.12) 38%,
+                rgba(0, 0, 0, 0.68) 75%,
+                rgba(0, 0, 0, 0.97) 100%
+            );
+            box-shadow: inset 0 0 95px 38px #000;
+        }
+
+        /* Conteúdo centralizado na parte superior */
+        .texto-topo {
+            position: relative;
+            z-index: 2;
+            margin-top: clamp(24px, 5vh, 52px);
+            width: min(90%, 900px);
+            text-align: center;
+        }
+
+        .texto-topo h1 {
+            font-size: clamp(1.65rem, 4vw, 3.1rem);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+            text-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.95),
+                0 0 18px rgba(255, 255, 255, 0.55),
+                0 0 36px var(--cor-brilho);
+            transition: text-shadow 0.35s ease;
+        }
+
+        /* Grupo de botões de navegação */
+        .menu-botoes {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        /* Botões / Links de navegação */
+        .btn-nav {
+            display: inline-block;
+            padding: 10px 24px;
+            border-radius: 999px;
+            border: 1px solid rgba(180, 225, 255, 0.7);
+            background-color: rgba(0, 0, 0, 0.55);
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            box-shadow:
+                0 0 16px var(--cor-brilho),
+                inset 0 0 10px rgba(255, 255, 255, 0.12);
+            transition: transform 0.2s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .btn-nav:hover,
+        .btn-nav:focus-visible {
+            background-color: rgba(255, 255, 255, 0.16);
+            box-shadow:
+                0 0 24px rgba(160, 220, 255, 0.7),
+                0 0 10px rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* ============================================================
+           SEÇÃO CENTRAL DE INTEGRANTES & BIOGRAFIAS
+           ============================================================ */
+        .secao-integrantes {
+            position: relative;
+            z-index: 2;
+            width: min(92%, 1200px);
+            margin-top: clamp(32px, 5vh, 52px);
+        }
+
+        .titulo-integrantes {
+            font-size: clamp(1.2rem, 2.4vw, 1.75rem);
+            font-weight: 700;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 22px;
+            text-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.95),
+                0 0 22px var(--cor-brilho);
+        }
+
+        .grade-integrantes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 20px;
+        }
+
+        .card-integrante {
+            display: flex;
+            flex-direction: column;
+            border-radius: 16px;
+            overflow: hidden;
+            background: rgba(10, 12, 16, 0.72);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(180, 225, 255, 0.4);
+            box-shadow:
+                0 10px 28px rgba(0, 0, 0, 0.8),
+                0 0 16px var(--cor-brilho);
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.3s ease;
+        }
+
+        .card-integrante:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.82);
+            box-shadow:
+                0 14px 34px rgba(0, 0, 0, 0.9),
+                0 0 26px var(--cor-brilho),
+                0 0 12px rgba(255, 255, 255, 0.35);
+        }
+
+        .foto-integrante {
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            overflow: hidden;
+            background-color: #08080a;
+        }
+
+        .foto-integrante img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            display: block;
+            transition: transform 0.35s ease;
+        }
+
+        .card-integrante:hover .foto-integrante img {
+            transform: scale(1.05);
+        }
+
+        .info-integrante {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-grow: 1;
+        }
+
+        .nome-integrante {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .detalhe-integrante {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--cor-texto);
+        }
+
+        .bio-integrante {
+            font-size: 0.88rem;
+            line-height: 1.45;
+            color: rgba(235, 245, 255, 0.9);
+            margin-top: 4px;
+        }
+
+        /* Botão flutuante no canto inferior direito que acompanha o scroll */
+        .btn-tema {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 999;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 18px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            background: rgba(12, 12, 16, 0.78);
+            backdrop-filter: blur(8px);
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow:
+                0 8px 24px rgba(0, 0, 0, 0.75),
+                0 0 16px var(--cor-brilho);
+            transition: transform 0.2s ease, background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.35s ease;
+        }
+
+        .btn-tema:hover,
+        .btn-tema:focus-visible {
+            background: rgba(28, 28, 36, 0.92);
+            border-color: rgba(255, 255, 255, 0.55);
+            transform: translateY(-2px);
+        }
+
+        .btn-tema:active {
+            transform: translateY(0);
+        }
+
+        .tema-nome {
+            color: rgba(225, 240, 255, 0.9);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="hero-bg" id="heroBg" aria-hidden="true"></div>
+
+        <div class="texto-topo">
+            <h1>Bem-vindo ao Illit</h1>
+            <nav class="menu-botoes" aria-label="Navegação principal">
+                <a href="About.html" class="btn-nav">Sobre</a>
+                <a href="Stage.html" class="btn-nav">Estágios</a>
+                <a href="Albuns.html" class="btn-nav">Álbuns</a>
+            </nav>
+        </div>
+
+        <main class="secao-integrantes" aria-label="Integrantes do ILLIT">
+            <h2 class="titulo-integrantes">Integrantes</h2>
+            <div class="grade-integrantes" id="gradeIntegrantes"></div>
+        </main>
+    </section>
+
+    <button type="button" class="btn-tema" id="btnTema" aria-label="Alternar tema de fundo">
+        <span>Tema:</span>
+        <span class="tema-nome" id="nomeTema">mamihilapinapai</span>
+    </button>
+
+    <script>
+        // ============================================================
+        // INTEGRANTES E BIOGRAFIAS
+        // ============================================================
+        const INTEGRANTES = [
+            {
+                nome: "Yunah",
+                detalhe: "Nascida em 15 de janeiro de 2004",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/members/yunah.jpg",
+                bio: "Integrante mais velha do ILLIT, destaca-se pela presença de palco marcante, energia expressiva e versatilidade vocal e na dança."
+            },
+            {
+                nome: "Minju",
+                detalhe: "Nascida em 11 de maio de 2004",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/members/minju.jpg",
+                bio: "Conhecida pelo timbre vocal suave, precisão nas apresentações e forte conexão com os fãs em palcos e conteúdos."
+            },
+            {
+                nome: "Moka",
+                detalhe: "Nascida em 8 de outubro de 2004",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/members/moka.jpg",
+                bio: "Integrante japonesa do grupo, chama atenção pelo carisma delicado, leveza nos movimentos e expressões cativantes."
+            },
+            {
+                nome: "Wonhee",
+                detalhe: "Nascida em 26 de junho de 2007",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/members/wonhee.jpg",
+                bio: "Vencedora do programa R U Next?, leva frescor, vocais brilhantes e uma atmosfera contagiante às performances."
+            },
+            {
+                nome: "Iroha",
+                detalhe: "Nascida em 4 de fevereiro de 2008",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/members/iroha.jpg",
+                bio: "A caçula (maknae) do ILLIT, também natural do Japão, é reconhecida pela agilidade, controle corporal e energia na dança."
+            }
+        ];
+
+        function renderizarIntegrantes() {
+            const container = document.getElementById("gradeIntegrantes");
+            container.innerHTML = "";
+
+            INTEGRANTES.forEach((membro) => {
+                const card = document.createElement("article");
+                card.className = "card-integrante";
+
+                card.innerHTML = `
+                    <div class="foto-integrante">
+                        <img src="${membro.imagem}" alt="Foto de ${membro.nome}" loading="lazy">
+                    </div>
+                    <div class="info-integrante">
+                        <h3 class="nome-integrante">${membro.nome}</h3>
+                        <span class="detalhe-integrante">${membro.detalhe}</span>
+                        <p class="bio-integrante">${membro.bio}</p>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        renderizarIntegrantes();
+
+        // ============================================================
+        // LISTA DE TEMAS ATUALIZADA (Com todos os GIFs e JPEGs solicitados)
+        // ============================================================
+        const TEMAS = [
+            {
+                nome: "mamihilapinapai",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/img%20site/Illit%20-%20mamihilapinapai.jpg",
+                brilho: "rgba(160, 210, 255, 0.45)"
+            },
+            {
+                nome: "jellyous",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/img%20site/illit%20-%20jellyous.gif",
+                brilho: "rgba(220, 160, 255, 0.45)"
+            },
+            {
+                nome: "billyeongoiang",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/img%20site/Illit%20-%20billyeongoiang.gif",
+                brilho: "rgba(160, 255, 210, 0.45)"
+            },
+            {
+                nome: "not me",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/img%20site/not%20me.gif",
+                brilho: "rgba(255, 180, 180, 0.45)"
+            },
+            {
+                nome: "magnetic",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/img%20site/magnetic.gif",
+                brilho: "rgba(180, 220, 255, 0.45)"
+            },
+            {
+                nome: "BREAKEVEN",
+                imagem: "file:///c:/Users/ALN/Downloads/teste/img%20site/Illit%20-%20%20BREAKEVEN.jpg",
+                brilho: "rgba(255, 220, 160, 0.45)"
+            }
+        ];
+
+        const heroBg = document.getElementById("heroBg");
+        const btnTema = document.getElementById("btnTema");
+        const nomeTemaEl = document.getElementById("nomeTema");
+        const rootStyle = document.documentElement.style;
+
+        let indiceAtual = 0;
+
+        function aplicarTema(indice, animar = true) {
+            const tema = TEMAS[indice];
+            if (!tema) return;
+
+            if (animar) {
+                heroBg.classList.add("trocando");
+            }
+
+            // Pré-carrega a imagem/gif via objeto Image para evitar "piscada" preta
+            const imgLoader = new Image();
+            imgLoader.src = tema.imagem;
+            imgLoader.onload = () => {
+                setTimeout(() => {
+                    heroBg.style.backgroundImage = `url("${tema.imagem}")`;
+                    nomeTemaEl.textContent = tema.nome;
+                    rootStyle.setProperty("--cor-brilho", tema.brilho);
+                    heroBg.classList.remove("trocando");
+                }, animar ? 140 : 0);
+            };
+        }
+
+        // Garante que o primeiro tema (mamihilapinapai) seja aplicado imediatamente
+        aplicarTema(0, false);
+
+        btnTema.addEventListener("click", () => {
+            indiceAtual = (indiceAtual + 1) % TEMAS.length;
+            aplicarTema(indiceAtual, true);
+        });
+    </script>
+</body>
+</html>
